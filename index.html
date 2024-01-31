@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV File Processing</title>
+</head>
+<body>
+
+    <input type="file" id="csvFileInput" accept=".csv" />
+    <button onclick="processCSV()">Process CSV</button>
+
+    <div id="resultTable"></div>
+
+    <script>
+        function processCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const resultTable = document.getElementById('resultTable');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const content = e.target.result;
+
+                    const rows = content.split('\n');
+                    const categories = {};
+
+                    rows.forEach(row => {
+                        const data = row.split(',');
+                        const industry = data[3];
+                        const financialValue = parseFloat(data[8]);
+
+                        if (!isNaN(financialValue)) {
+                            if (!categories[industry]) {
+                                categories[industry] = financialValue;
+                            } else {
+                                categories[industry] += financialValue;
+                            }
+                        }
+                    });
+
+                    let tableHTML = "<table border='1'><tr><th>Industry</th><th>Financial Value Summation</th></tr>";
+                    Object.keys(categories).forEach(industry => {
+                        tableHTML += `<tr><td>${industry}</td><td>${categories[industry]}</td></tr>`;
+                    });
+                    tableHTML += "</table>";
+
+                    resultTable.innerHTML = tableHTML;
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert('Please select a CSV file.');
+            }
+        }
+    </script>
+
+</body>
+</html>
