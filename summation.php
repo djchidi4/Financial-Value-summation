@@ -34,6 +34,6 @@ function categorizeAndSummarizeCSV($csvFilePath) {
     echo "</table>";
 }
 
-categorizeAndSummarizeCSV('test.csv');
+categorizeAndSummarizeCSV('summation.csv');
 
 ?>
